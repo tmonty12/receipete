@@ -11,7 +11,7 @@ from werkzeug.urls import url_parse
 @app.route('/index')
 @login_required
 def index():
-    return "Recipes!"
+    return 'Recipes!'
 
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -41,7 +41,9 @@ def login():
         return redirect(next_page)
     ## TO DO: implement login.html template that includes login form
     # return render_template('login.html', title='Log In', form=form)
-    return 'Login page'
+    user = {'username' : 'Sarah'}
+    ##return render_template('index.html', title = 'Home', user = user)
+    return render_template('login.html', title='Sign In', form=form)
 
 # Logout page
 @app.route('/logout')
