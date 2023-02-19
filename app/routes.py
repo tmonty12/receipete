@@ -69,4 +69,5 @@ def create_account():
         return redirect(url_for('login'))
     ## TO DO: implement create-account.html template that includes create account form
     # return render_template('create-account.html', title='Create Account', form=form)
-    return 'Create account page'
+    #return 'Create account page'
+    return render_template('register.html', title='Register', form=form)
