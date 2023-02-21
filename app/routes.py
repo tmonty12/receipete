@@ -1,5 +1,5 @@
-from flask import redirect, flash, render_template, request
-from app import app
+from flask import redirect, flash, render_template, request, url_for
+from app import app, db
 from app.forms import LoginForm, CreateAccountForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User
@@ -26,6 +26,7 @@ def login():
 
         # Will query user based on username submitted in form
         user = User.query.filter_by(username=form.username.data).first()
+        print(user)
 
         # If a user with the username dne or the user entered the wrong password
         # display error to user and redirect back to login page. 
@@ -49,7 +50,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redierct(url_for('index'))
+    return redirect(url_for('index'))
 
 # Create account page
 @app.route('/create-account', methods=['GET', 'POST'])
