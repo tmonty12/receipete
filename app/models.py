@@ -9,16 +9,16 @@ from sqlalchemy.sql import func
 def load_user(id):
     return User.query.get(int(id))
 
-
 # User table
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    ingredients = db.relationship('Ingredient', backref='user', lazy='dynamic')
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return f'<User {self.username}>'
 
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
@@ -26,13 +26,16 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-
-class Food(db.Model):
+class Ingredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    food_name = db.Column(db.String(100), nullable=False)
-    expiration = db.Column(db.String(100), nullable=False)
-    created_at = db.Column(db.DateTime(timezone=True),
-                           server_default=func.now())
+    api_id = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(100), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
+<<<<<<< HEAD
         return f'<Food {self.food_name}>'
+=======
+        return f'<Ingredient {self.name}>'
+>>>>>>> 5225d0a9195fd43f504f9872ee302cba667c5eca
