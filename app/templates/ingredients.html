@@ -1,0 +1,25 @@
+<!doctype html>
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Search Ingredients</h1>
+    <form action="" method="post" novalidate>
+        {{ search_form.hidden_tag() }}
+        <p>
+            {{ search_form.ingredient.label }}<br>
+            {{ search_form.ingredient(size=32) }}
+        </p>
+        <p>{{ search_form.submit() }}</p>
+    </form> 
+    <form action="" method="post" novalidate>
+    {% if ingredients %}
+    {% for ingredient in add_form.ingredients %}
+        <div>
+            {{ ingredient() }}
+            {{ ingredient.label() }}
+        </div>
+    {% endfor %}
+    <p>{{ add_form.submit() }}</p>
+    {% endif %}
+    </form>
+{% endblock %}

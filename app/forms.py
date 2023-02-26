@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, widgets
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
 
@@ -26,3 +26,12 @@ class CreateAccountForm(FlaskForm):
         user = User.query.filter_by(email=email.data).first()
         if user is not None:
             raise ValidationError('Please use a different email address.')
+
+
+class SearchIngredientsForm(FlaskForm):
+    ingredient = StringField('Ingredient', validators=[DataRequired()])
+    submit = SubmitField('Search')
+
+class AddIngredientsForms(FlaskForm):
+    ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
+    submit = SubmitField('Add Ingredients')

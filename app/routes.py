@@ -1,9 +1,10 @@
-from flask import redirect, flash, render_template, request, url_for
+from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
-from app.forms import LoginForm, CreateAccountForm
+from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForms
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User
+from app.models import User, Ingredient
 from werkzeug.urls import url_parse
+from app.api import query_ingredients
 
 # Landing page containing list of generated Recipes
 # login_required decorator will redirect user if they are not logged into an account
@@ -72,3 +73,25 @@ def create_account():
     # return render_template('create-account.html', title='Create Account', form=form)
     #return 'Create account page'
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/ingredients/search', methods=['GET', 'POST'])
+@login_required
+def search_ingredients():
+    search_form = SearchIngredientsForm()
+    add_form = AddIngredientsForms()
+    ingredients = []
+
+    if request.form.get('submit') == 'Search' and search_form.validate():
+        ingredients = query_ingredients(search_form.ingredient.data)
+        ingredients = [(f"{ingredient['id']},{ingredient['name']},{ingredient['image']}", ingredient['name'])  for ingredient in ingredients]
+        add_form.ingredients.choices = ingredients
+
+    if request.form.get('submit') == 'Add Ingredients':
+        for ingredient in add_form.ingredients.data:
+            api_id, name, image = ingredient.split(',')
+            ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user)
+            db.session.add(ingredient)
+        db.session.commit()
+
+    return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form, ingredients=ingredients)
