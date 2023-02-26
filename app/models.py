@@ -34,8 +34,4 @@ class Ingredient(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
     def __repr__(self):
-<<<<<<< HEAD
-        return f'<Food {self.food_name}>'
-=======
         return f'<Ingredient {self.name}>'
->>>>>>> 5225d0a9195fd43f504f9872ee302cba667c5eca

@@ -11,6 +11,9 @@
             width: 50%;
         }
     </style>
+        {% for ingredient in ingredients %}
+            <p>{{ingredient.name}}</p>
+        {% endfor %}
         <div class = "column" >
             Ingredients:
             

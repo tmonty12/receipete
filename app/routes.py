@@ -74,14 +74,11 @@ def create_account():
     #return 'Create account page'
     return render_template('register.html', title='Register', form=form)
 
-<<<<<<< HEAD
 @app.route('/pantry', methods=['GET', 'POST'])
 @login_required
 def pantry():
-        
-        
-        return render_template('pantry.html', title='Pantry')
-=======
+    ingredients = current_user.ingredients.all()
+    return render_template('pantry.html', title='Pantry', ingredients=ingredients)
 
 @app.route('/ingredients/search', methods=['GET', 'POST'])
 @login_required
@@ -103,4 +100,3 @@ def search_ingredients():
         db.session.commit()
 
     return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form, ingredients=ingredients)
->>>>>>> 5225d0a9195fd43f504f9872ee302cba667c5eca
