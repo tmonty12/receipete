@@ -1,5 +1,5 @@
 <!doctype html>
-{% extends "base.html" %}
+{% extends "loggedin_base.html" %}
 
 {% block content %}
     <h1>My Pantry</h1>
@@ -11,18 +11,21 @@
             width: 50%;
         }
     </style>
-        {% for ingredient in ingredients %}
-            <p>{{ingredient.name}}</p>
-        {% endfor %}
+        
+        {% if ingredients %}
         <div class = "column" >
             Ingredients:
-            
+        {% for ingredient in ingredients %}
+            <p>{{ingredient.name.capitalize()}}</p>
+        {% endfor %}
         </div class = "column">
-
         <div class = "column" >
             Expiration Dates:
             
         </div class = "column">
+        {% else %}
+        <p>Add some ingredients homeboy</p>
+        {% endif %}
     </body>
     
 {% endblock %}

@@ -12,7 +12,7 @@ from app.api import query_ingredients
 @app.route('/index')
 @login_required
 def index():
-    return 'Recipes!'
+    return render_template('recipes.html', title='Recipes')
 
 # Login page
 @app.route('/login', methods=['GET', 'POST'])

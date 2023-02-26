@@ -1,0 +1,20 @@
+<!doctype html>
+<html>
+    <head>
+      {% if title %}
+      <title>{{ title }} - Receipete</title>
+      {% else %}
+      <title>Welcome to Receipete</title>
+      {% endif %}
+    </head>
+    <body>
+<!--        <div>Receipete: <a href="/index">Home</a></div> -->
+        <div>
+            Receipete:
+            <a href="/ingredients/search">Add Ingredients</a>
+            <a href="/pantry">Pantry</a>
+        </div>
+        <hr>
+        {% block content %}{% endblock %}
+    </body>
+</html>
