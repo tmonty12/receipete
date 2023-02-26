@@ -72,3 +72,10 @@ def create_account():
     # return render_template('create-account.html', title='Create Account', form=form)
     #return 'Create account page'
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/pantry', methods=['GET', 'POST'])
+@login_required
+def pantry():
+        
+        
+        return render_template('pantry.html', title='Pantry')
