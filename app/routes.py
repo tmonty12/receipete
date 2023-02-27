@@ -89,14 +89,22 @@ def search_ingredients():
 
     if request.form.get('submit') == 'Search' and search_form.validate():
         ingredients = query_ingredients(search_form.ingredient.data)
-        ingredients = [(f"{ingredient['id']},{ingredient['name']},{ingredient['image']}", ingredient['name'])  for ingredient in ingredients]
-        add_form.ingredients.choices = ingredients
+        if len(ingredients) == 0:
+            flash(f"No ingredients matched your query: {search_form.ingredient.data}")
+        else:
+            ingredients = [(f"{ingredient['id']},{ingredient['name']},{ingredient['image']}", f"{ingredient['name']},{ingredient['image']}")  for ingredient in ingredients]
+            add_form.ingredients.choices = ingredients
 
     if request.form.get('submit') == 'Add Ingredients':
-        for ingredient in add_form.ingredients.data:
-            api_id, name, image = ingredient.split(',')
-            ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user)
-            db.session.add(ingredient)
-        db.session.commit()
+        if len(add_form.ingredients.data) == 0:
+            flash('You did not select any ingredients to add to your pantry')
+        else:
+            for ingredient in add_form.ingredients.data:
+                api_id, name, image = ingredient.split(',')
+                ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user)
+                db.session.add(ingredient)
+                flash(f'You have added {name} to your pantry.')
+            db.session.commit()
+            return redirect(url_for('search_ingredients'))
 
     return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form, ingredients=ingredients)

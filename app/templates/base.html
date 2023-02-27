@@ -8,14 +8,21 @@
       {% endif %}
     </head>
     <body>
-<!--        <div>Receipete: <a href="/index">Home</a></div> -->
         <div>
             Receipete:
-            <a href="/index">Home</a>
             <a href="/login">Login</a>
-            <a href="/pantry">Pantry</a>
+            <a href="/create-account">Create Account</a>
         </div>
         <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}  
         {% block content %}{% endblock %}
     </body>
 </html>

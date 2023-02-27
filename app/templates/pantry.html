@@ -10,13 +10,28 @@
             float: left;
             width: 50%;
         }
+        .ingredient {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            background-color: #F2F3F5;
+            border-radius: 10px
+        }
+        .ingredient img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 10px;
+        }
     </style>
         
         {% if ingredients %}
         <div class = "column" >
             Ingredients:
         {% for ingredient in ingredients %}
+        <div class="ingredient">
+            <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image}}" />
             <p>{{ingredient.name.capitalize()}}</p>
+        </div>
         {% endfor %}
         </div class = "column">
         <div class = "column" >

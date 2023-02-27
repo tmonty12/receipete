@@ -11,10 +11,21 @@
 <!--        <div>Receipete: <a href="/index">Home</a></div> -->
         <div>
             Receipete:
+            <a href="/">Home</a>
             <a href="/ingredients/search">Add Ingredients</a>
             <a href="/pantry">Pantry</a>
+            <a href="/logout">Log Out</a>
         </div>
         <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+                <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
         {% block content %}{% endblock %}
     </body>
 </html>
