@@ -2,8 +2,6 @@
 {% extends "loggedin_base.html" %}
 
 {% block content %}
-    <h1>My Pantry</h1>
-    <body>
     <style>
         .column 
         {
@@ -13,6 +11,7 @@
         .ingredient {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin: 10px;
             background-color: #F2F3F5;
             border-radius: 10px
@@ -22,25 +21,39 @@
             max-height: 50px;
             margin: 10px;
         }
+        .ingredient div {
+            display: flex;
+            align-items: center;
+        }
+        .ingredient a {
+            margin-right: 20px;
+        }
     </style>
-        
+    <body>
+        <h1>My Pantry</h1>
         {% if ingredients %}
-        <div class = "column" >
-            Ingredients:
-        {% for ingredient in ingredients %}
-        <div class="ingredient">
-            <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image}}" />
-            <p>{{ingredient.name.capitalize()}}</p>
+        <a href="{{ url_for('delete_pantry_items')}}"><button>Delete Items</button></a>
+        <div>
+            <div class = "column" >
+                Ingredients:
+            {% for ingredient in ingredients %}
+            <div class="ingredient">
+                <div>
+                    <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image}}" />
+                    <p>{{ingredient.name.capitalize()}}</p>
+                </div>
+                <a href="{{ url_for('edit_pantry_item', id=ingredient.id)}}"><button>Edit</button></a>
+            </div>
+            {% endfor %}
+            </div class = "column">
+            <div class = "column" >
+                Expiration Dates:
+                
+            </div class = "column">
+            {% else %}
+            <p>You currently have no ingredients. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
+            {% endif %}
         </div>
-        {% endfor %}
-        </div class = "column">
-        <div class = "column" >
-            Expiration Dates:
-            
-        </div class = "column">
-        {% else %}
-        <p>You currently have no ingredients. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
-        {% endif %}
     </body>
     
 {% endblock %}

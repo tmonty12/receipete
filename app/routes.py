@@ -1,6 +1,6 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
-from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForms
+from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient
 from werkzeug.urls import url_parse
@@ -27,7 +27,6 @@ def login():
 
         # Will query user based on username submitted in form
         user = User.query.filter_by(username=form.username.data).first()
-        print(user)
 
         # If a user with the username dne or the user entered the wrong password
         # display error to user and redirect back to login page. 
@@ -74,17 +73,41 @@ def create_account():
     #return 'Create account page'
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/pantry', methods=['GET', 'POST'])
+@app.route('/pantry', methods=['GET'])
 @login_required
 def pantry():
     ingredients = current_user.ingredients.all()
     return render_template('pantry.html', title='Pantry', ingredients=ingredients)
 
+@app.route('/pantry/edit/<id>', methods=['GET', 'POST'])
+@login_required
+def edit_pantry_item(id):
+    ingredient = Ingredient.query.filter_by(id=id).first()
+    if not ingredient:
+        return redirect(url_for('pantry'))
+    return render_template('edit_pantry_item.html', title='Edit Pantry Item', ingredient=ingredient)
+
+@app.route('/pantry/delete', methods=['GET', 'POST'])
+@login_required
+def delete_pantry_items():
+    ingredients = current_user.ingredients.all()
+    form = DeleteIngredientsForm()
+    form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.image}")  for ingredient in ingredients]
+
+    if form.validate_on_submit():
+        for ingredient in form.ingredients.data:
+            ingredient = Ingredient.query.filter_by(id=int(ingredient)).first()
+            db.session.delete(ingredient)
+        db.session.commit()
+
+    return render_template('delete_pantry_items.html')
+
+
 @app.route('/ingredients/search', methods=['GET', 'POST'])
 @login_required
 def search_ingredients():
     search_form = SearchIngredientsForm()
-    add_form = AddIngredientsForms()
+    add_form = AddIngredientsForm()
     ingredients = []
 
     if request.form.get('submit') == 'Search' and search_form.validate():
