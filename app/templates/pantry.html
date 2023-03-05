@@ -31,8 +31,7 @@
     </style>
     <body>
         <h1>My Pantry</h1>
-        {% if ingredients %}
-        <a href="{{ url_for('delete_pantry_items')}}"><button>Delete Items</button></a>
+        {% if ingredients %}  
         <div>
             <div class = "column" >
                 Ingredients:
@@ -45,6 +44,7 @@
                 <a href="{{ url_for('edit_pantry_item', id=ingredient.id)}}"><button>Edit</button></a>
             </div>
             {% endfor %}
+            <a href="{{ url_for('delete_pantry_items')}}"><button>Delete Items</button></a>
             </div class = "column">
             <div class = "column" >
                 Expiration Dates:
