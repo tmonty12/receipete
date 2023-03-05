@@ -94,13 +94,14 @@ def delete_pantry_items():
     form = DeleteIngredientsForm()
     form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.image}")  for ingredient in ingredients]
 
-    if form.validate_on_submit():
+    if request.form.get('submit') == 'Delete Items':
         for ingredient in form.ingredients.data:
             ingredient = Ingredient.query.filter_by(id=int(ingredient)).first()
             db.session.delete(ingredient)
         db.session.commit()
+        return redirect(url_for('delete_pantry_items'))
 
-    return render_template('delete_pantry_items.html')
+    return render_template('delete_pantry_items.html', form=form, ingredients=ingredients)
 
 
 @app.route('/ingredients/search', methods=['GET', 'POST'])

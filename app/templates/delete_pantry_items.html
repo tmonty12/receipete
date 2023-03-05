@@ -3,9 +3,34 @@
 
 {% block content %}
     <style>
+        .ingredient {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            background-color: #F2F3F5;
+            border-radius: 10px
+        }
+        .ingredient img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 10px;
+        }
     </style>
-    <body>
-        <h1>Delete Pantry Items</h1>
-    </body>
+
+    <h1>Delete Pantry Items</h1>
+    <form action="" method="post" novalidate>
+    {% if ingredients %}
+    {% for ingredient in form.ingredients %}
+    {% set ingredient_values = ingredient.label().split(',') %}
+    {% set url_list = ingredient_values[1].split('</label>') %}
+        <div class="ingredient">
+            {{ ingredient() }}
+            <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
+            {{ ingredient_values[0] }}
+        </div>
+    {% endfor %}
+    <p>{{ form.submit() }}</p>
+    {% endif %}
+    </form>
     
 {% endblock %}
