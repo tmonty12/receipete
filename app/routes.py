@@ -98,6 +98,7 @@ def delete_pantry_items():
         for ingredient in form.ingredients.data:
             ingredient = Ingredient.query.filter_by(id=int(ingredient)).first()
             db.session.delete(ingredient)
+            flash(f'You have deleted {ingredient.name} from your pantry.')
         db.session.commit()
         return redirect(url_for('delete_pantry_items'))
 

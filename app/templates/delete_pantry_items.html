@@ -30,6 +30,9 @@
         </div>
     {% endfor %}
     <p>{{ form.submit() }}</p>
+    
+    {% else %}
+    <p>You currently have no ingredients. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
     {% endif %}
     </form>
     
