@@ -2,5 +2,42 @@
 {% extends "loggedin_base.html" %}
 
 {% block content %}
-    <h1>Recipes!</h1> 
+    <style>
+        .recipe {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            background-color: #F2F3F5;
+            border-radius: 10px
+        }
+
+        .recipe img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 10px;
+        }
+    </style>
+    <h1>Search Recipes</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.recipe.label }}<br>
+            {{ form.recipe(size=32) }}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+
+    <form action="" method="post" novalidate>
+    {% if recipes %}
+    {% for recipe in form.recipes %}
+    {% set recipe_value = recipe.label().split(',') %}
+    {% set url_list = recipe_value[2] %}
+        <div class="recipes">
+            {{ recipe() }}
+            <img src="{{ url_list[0] }}"/>
+            {{ recipe_value[1] }}
+        </div>
+    {% endfor %}
+    {% endif %}
+    </form>
 {% endblock %}
