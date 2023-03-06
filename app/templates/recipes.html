@@ -2,5 +2,24 @@
 {% extends "loggedin_base.html" %}
 
 {% block content %}
-    <h1>Recipes!</h1> 
+    <style>
+        .recipe {
+            display: flex;
+            align-items: center;
+            margin: 10px;
+            background-color: #F2F3F5;
+            border-radius: 10px
+        }
+
+        .recipe img {
+            max-width: 50px;
+            max-height: 50px;
+            margin: 10px;
+        }
+    </style>
+    <h1>Recipes</h1>
+    {% if recipes %}
+    {% else %}
+        <p></p>
+    {% endif %}
 {% endblock %}
