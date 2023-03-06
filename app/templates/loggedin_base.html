@@ -2,20 +2,20 @@
 <html>
     <head>
       {% if title %}
-      <title>{{ title }} - Receipete</title>
+      <title style="font-family:helvetica;">{{ title }} - Receipete</title>
       {% else %}
-      <title>Welcome to Receipete</title>
+      <title style="font-family:helvetica;">Welcome to Receipete</title>
       {% endif %}
     </head>
     <body>
 <!--        <div>Receipete: <a href="/index">Home</a></div> -->
         <div>
-            Receipete:
-            <a href="/">Home</a>
-            <a href="/ingredients/search">Add Ingredients</a>
-            <a href="/pantry">Pantry</a>
-            <a href="/logout">Log Out</a>
-            <a href="/index">Recipes</a>
+            <a style="font-family:helvetica; font-weight:bolder">Receipete: </a>
+            <a style = "font-family:helvetica" href="/">Home</a>
+            <a style = "font-family:helvetica" href="/ingredients/search">Add Ingredients</a>
+            <a style = "font-family:helvetica" href="/pantry">Pantry</a>
+            <a style = "font-family:helvetica" href="/logout">Log Out</a>
+            <a style = "font-family:helvetica" href="/index">Recipes</a>
         </div>
         <hr>
         {% with messages = get_flashed_messages() %}

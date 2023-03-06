@@ -6,18 +6,19 @@
 
 
     </style>
-    <h1>Instructions</h1>
+    <h1 style="font-family:helvetica;">Instructions</h1>
     {% if instructions %}
-        Instructions:
+        
         <div class="instructions">
             <div>
                 <img src="{{ instructions['image']  }}" />
+                <p style = "font-weight:bolder"> Instructions: </p>
                 <p>{{ instructions['instructions'] }}</p>
             </div>
 
         </div>
         <div class="ingredients">
-           Ingredients:
+           <span style = "font-weight:bolder">Ingredients: </span>
             {%for ingredient in ingredients%}
                 <div>
                     <p> {{ ingredient[0] }}</p>
