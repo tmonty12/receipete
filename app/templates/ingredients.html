@@ -35,16 +35,13 @@
             <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
             {{ ingredient_values[0] }}
         </div>
+        <label>
+            Enter expiration date:
+            <input type="date" name="expiration" />
+          </label>
+
     {% endfor %}
     <p>{{ add_form.submit() }}</p>
     {% endif %}
     </form>
-    <form action="">
-        <label>
-          Enter expiration date:
-          <input type="date" name="expiration" />
-        </label>
-       
-        <p><button>Submit</button></p>
-      </form>
 {% endblock %}
