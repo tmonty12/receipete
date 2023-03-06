@@ -39,3 +39,7 @@ class AddIngredientsForm(FlaskForm):
 class DeleteIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Delete Items')
+
+class SearchRecipesForm(FlaskForm):
+    recipe = StringField('Ingredients', validators=[DataRequired()])
+    submit = SubmitField('Search')

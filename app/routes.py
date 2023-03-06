@@ -1,10 +1,10 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
-from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm
+from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, SearchRecipesForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient
 from werkzeug.urls import url_parse
-from app.api import query_ingredients
+from app.api import query_ingredients, query_recipes
 
 # Landing page containing list of generated Recipes
 # login_required decorator will redirect user if they are not logged into an account
@@ -12,7 +12,7 @@ from app.api import query_ingredients
 @app.route('/index')
 @login_required
 def index():
-    return render_template('recipes.html', title='Recipes')
+    return render_template('loggedin_base.html', title='Recipes')
 
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -133,3 +133,22 @@ def search_ingredients():
             return redirect(url_for('search_ingredients'))
 
     return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form, ingredients=ingredients)
+
+@app.route('/recipes', methods=['GET', 'POST'])
+@login_required
+def search_recipes():
+    form = SearchRecipesForm()
+    recipes = []
+
+    if request.form.get('submit') == 'Search' and form.validate():
+        recipes = query_recipes(form.recipe.data)
+
+        if len(recipes) == 0:
+            flash(f"No recipes matched your query: {form.ingredient.data}")
+        else:
+            recipes = [f"{recipe['id']},{recipe['title']},{recipe['image']}" for recipe in recipes]
+
+
+
+    print(recipes)
+    return render_template('recipes.html', title='Search Recipes', form=form, recipes=recipes)
