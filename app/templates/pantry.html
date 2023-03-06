@@ -34,7 +34,7 @@
         {% if ingredients %}  
         <div>
             <div class = "column" >
-                <span style="font-weight:bolder">Ingredients:</span>
+                <span style="font-size:160%;">Ingredients:</span>
             {% for ingredient in ingredients %}
             <div class="ingredient">
                 <div>
@@ -47,7 +47,7 @@
             <a href="{{ url_for('delete_pantry_items')}}"><button>Delete Items</button></a>
             </div class = "column">
             <div class = "column" >
-                <span style="font-weight:bolder">Expiration Dates:</span>
+                <span style="font-size:160%;">Expiration Dates:</span>
                 
             </div class = "column">
             {% else %}
