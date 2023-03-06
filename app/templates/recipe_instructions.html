@@ -1,0 +1,19 @@
+<!doctype html>
+{% extends "loggedin_base.html" %}
+
+{% block content %}
+    <style>
+
+
+    </style>
+    <h1>Instructions</h1>
+    {% if instructions %}
+        instructions
+        <div class="instructions">
+            <div>
+                <img src="{{ instructions['image']  }}" />
+                <p>{{ instructions['instructions'] }}</p>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}

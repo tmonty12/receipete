@@ -6,6 +6,7 @@
         .recipe {
             display: flex;
             align-items: center;
+            justify-content: space-between;
             margin: 10px;
             background-color: #F2F3F5;
             border-radius: 10px
@@ -16,10 +17,31 @@
             max-height: 50px;
             margin: 10px;
         }
+
+        .recipe div {
+            display: flex;
+            align-items: center;
+        }
+
+        .recipe a {
+            margin-right: 20px;
+        }
     </style>
     <h1>Recipes</h1>
     {% if recipes %}
+        Recipes:
+        {% for recipe in recipes %}
+        <div class="recipe">
+            <div>
+                <img src="{{ recipe[2]  }}" />
+                <p>{{ recipe[1] }}</p>
+            </div>
+            <a href="{{ url_for('view_recipe', id=recipe[0])}}">
+                <button>  View Recipe</button>
+            </a>
+        </div>
+        {%endfor%}
     {% else %}
-        <p></p>
+        <p>Your pantry is empty or no recipes were found</p>
     {% endif %}
 {% endblock %}

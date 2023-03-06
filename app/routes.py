@@ -1,10 +1,12 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
-from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, SearchRecipesForm
+from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
+    SearchRecipesForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient
 from werkzeug.urls import url_parse
-from app.api import query_ingredients, query_recipes
+from app.api import query_ingredients, query_recipes, query_instructions
+
 
 # Landing page containing list of generated Recipes
 # login_required decorator will redirect user if they are not logged into an account
@@ -12,14 +14,27 @@ from app.api import query_ingredients, query_recipes
 @app.route('/index')
 @login_required
 def index():
+    recipes = []
     ingredients = current_user.ingredients.all()
     ingredients_query = ''
     for ingredient in ingredients:
         ingredients_query += f'{ingredient.name},'
-    print(ingredients_query)
 
     recipes = query_recipes(ingredients_query)
+    recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes]
+
     return render_template('recipes.html', title='Recipes', recipes=recipes)
+
+
+@app.route('/summary/<id>', methods=['GET', 'POST'])
+@login_required
+def view_recipe(id):
+    instructions = []
+
+    instructions = query_instructions(id)
+
+    return render_template('recipe_instructions.html', title='Instructions', instructions=instructions)
+
 
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
@@ -49,15 +64,17 @@ def login():
         return redirect(next_page)
     ## TO DO: implement login.html template that includes login form
     # return render_template('login.html', title='Log In', form=form)
-    user = {'username' : 'Sarah'}
+    user = {'username': 'Sarah'}
     ##return render_template('index.html', title = 'Home', user = user)
     return render_template('login.html', title='Sign In', form=form)
+
 
 # Logout page
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 # Create account page
 @app.route('/create-account', methods=['GET', 'POST'])
@@ -67,7 +84,6 @@ def create_account():
         return redirect(url_for('index'))
     form = CreateAccountForm()
     if form.validate_on_submit():
-
         # Create a user, set the password, commit the user to the db and redirect to the login page
         user = User(username=form.username.data, email=form.email.data)
         user.set_password(form.password.data)
@@ -77,14 +93,16 @@ def create_account():
         return redirect(url_for('login'))
     ## TO DO: implement create-account.html template that includes create account form
     # return render_template('create-account.html', title='Create Account', form=form)
-    #return 'Create account page'
+    # return 'Create account page'
     return render_template('register.html', title='Register', form=form)
+
 
 @app.route('/pantry', methods=['GET'])
 @login_required
 def pantry():
     ingredients = current_user.ingredients.all()
     return render_template('pantry.html', title='Pantry', ingredients=ingredients)
+
 
 @app.route('/pantry/edit/<id>', methods=['GET', 'POST'])
 @login_required
@@ -94,12 +112,13 @@ def edit_pantry_item(id):
         return redirect(url_for('pantry'))
     return render_template('edit_pantry_item.html', title='Edit Pantry Item', ingredient=ingredient)
 
+
 @app.route('/pantry/delete', methods=['GET', 'POST'])
 @login_required
 def delete_pantry_items():
     ingredients = current_user.ingredients.all()
     form = DeleteIngredientsForm()
-    form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.image}")  for ingredient in ingredients]
+    form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.image}") for ingredient in ingredients]
 
     if request.form.get('submit') == 'Delete Items':
         for ingredient in form.ingredients.data:
@@ -124,7 +143,8 @@ def search_ingredients():
         if len(ingredients) == 0:
             flash(f"No ingredients matched your query: {search_form.ingredient.data}")
         else:
-            ingredients = [(f"{ingredient['id']},{ingredient['name']},{ingredient['image']}", f"{ingredient['name']},{ingredient['image']}")  for ingredient in ingredients]
+            ingredients = [(f"{ingredient['id']},{ingredient['name']},{ingredient['image']}",
+                            f"{ingredient['name']},{ingredient['image']}") for ingredient in ingredients]
             add_form.ingredients.choices = ingredients
 
     if request.form.get('submit') == 'Add Ingredients':
@@ -139,7 +159,8 @@ def search_ingredients():
             db.session.commit()
             return redirect(url_for('search_ingredients'))
 
-    return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form, ingredients=ingredients)
+    return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form,
+                           ingredients=ingredients)
 
 # @app.route('/recipes', methods=['GET', 'POST'])
 # @login_required
@@ -154,7 +175,6 @@ def search_ingredients():
 #             flash(f"No recipes matched your query: {form.ingredient.data}")
 #         else:
 #             recipes = [f"{recipe['id']},{recipe['title']},{recipe['image']}" for recipe in recipes]
-
 
 
 #     print(recipes)
