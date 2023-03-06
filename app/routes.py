@@ -5,7 +5,7 @@ from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIn
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient
 from werkzeug.urls import url_parse
-from app.api import query_ingredients, query_recipes, query_instructions
+from app.api import query_ingredients, query_recipes, query_instructions, query_recipe_ingredients
 
 
 # Landing page containing list of generated Recipes
@@ -30,10 +30,14 @@ def index():
 @login_required
 def view_recipe(id):
     instructions = []
+    ingredients = []
 
+    ingredients = query_recipe_ingredients(id)
     instructions = query_instructions(id)
 
-    return render_template('recipe_instructions.html', title='Instructions', instructions=instructions)
+    ingredients = [(f"{ingredient['name']}", ingredient['amount']) for ingredient in ingredients['ingredients']]
+
+    return render_template('recipe_instructions.html', title='Instructions', instructions=instructions, ingredients=ingredients)
 
 
 # Login page

@@ -8,12 +8,21 @@
     </style>
     <h1>Instructions</h1>
     {% if instructions %}
-        instructions
+        Instructions:
         <div class="instructions">
             <div>
                 <img src="{{ instructions['image']  }}" />
                 <p>{{ instructions['instructions'] }}</p>
             </div>
+
+        </div>
+        <div class="ingredients">
+           Ingredients:
+            {%for ingredient in ingredients%}
+                <div>
+                    <p> {{ ingredient[0] }}</p>
+                </div>
+            {%endfor%}
         </div>
     {% endif %}
 {% endblock %}
