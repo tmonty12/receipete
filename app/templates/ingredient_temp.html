@@ -14,6 +14,10 @@
             max-height: 50px;
             margin: 10px;
         }
+
+        .ingredient div{
+            margin-right: 10px;
+        }
     </style>
     <h1>Search Ingredients</h1>
     <form action="" method="post" novalidate>
@@ -23,7 +27,7 @@
             {{ search_form.ingredient(size=32) }}
         </p>
         <p>{{ search_form.submit() }}</p>
-    </form> 
+    </form>
     <form action="" method="post" novalidate>
     {% if ingredients %}
     {% for ingredient in add_form.ingredients %}
@@ -33,12 +37,11 @@
             {{ ingredient() }}
             <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
             {{ ingredient_values[0] }}
+            <div>
+                Enter expiration date:
+                <input type="date" name="expiration" />
+            </div>
         </div>
-        <label>
-            Enter expiration date:
-            <input type="date" name="expiration" />
-          </label>
-
     {% endfor %}
     <p>{{ add_form.submit() }}</p>
     {% endif %}

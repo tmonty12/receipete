@@ -1,32 +1,27 @@
-<!doctype html>
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Receipete</title>
-      {% else %}
-      <title>Welcome to Receipete</title>
-      {% endif %}
-    </head>
-    <body>
-<!--        <div>Receipete: <a href="/index">Home</a></div> -->
-        <div>
-            Receipete:
-            <a href="/">Home</a>
-            <a href="/ingredients/search">Add Ingredients</a>
-            <a href="/pantry">Pantry</a>
-            <a href="/logout">Log Out</a>
-            <a href="/index">Recipes</a>
+{% extends 'bootstrap/base.html' %}
+    {% block title %}
+        {% if title %}{{ title }} - Receipete{% else %}Welcome to Receipete{% endif %}
+    {% endblock %}
+    {% block navbar %}
+        <nav class="navbar navbar-default">
+            <span style="font-family:helvetica; font-weight:bolder; font-size:130%;">Receipete: </span>
+            <a style = "font-family:helvetica; font-size:130%;" href="/">Home</a>
+            <a style = "font-family:helvetica; font-size:130%;" href="/ingredients/search">Add Ingredients</a>
+            <a style = "font-family:helvetica; font-size:130%;" href="/pantry">Pantry</a>
+            <a style = "font-family:helvetica; font-size:130%;" href="/index">Recipes</a>
+            <a style = "font-family:helvetica; font-size:130%;" href="/logout">Log Out</a>
+        </nav>
+    {% endblock %}
+    {% block content %}
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block app_content %}
+        {% endblock %}
         </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}
-        {% block content %}{% endblock %}
-    </body>
-</html>
+    {% endblock %}

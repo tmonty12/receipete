@@ -1,28 +1,24 @@
-<!doctype html>
-<html>
-    <head>
-      {% if title %}
-      <title>{{ title }} - Receipete</title>
-      {% else %}
-      <title>Welcome to Receipete</title>
-      {% endif %}
-    </head>
-    <body>
-        <div>
-            Receipete:
-            <a href="/login">Login</a>
-            <a href="/create-account">Create Account</a>
+{% extends 'bootstrap/base.html' %}
+    {% block title %}
+        {% if title %}{{ title }} - Receipete{% else %}Welcome to Receipete{% endif %}
+    {% endblock %}
+    {% block navbar %}
+        <nav class="navbar navbar-default">
+            <span style="font-family:helvetica; font-weight:bolder; font-size:130%;">Receipete: </span>
+            <a style="font-family:helvetica; font-size:130%;" href="/login">Login</a>
+            <a style="font-family:helvetica; font-size:130%;" href="/create-account">Create Account</a>
+        </nav>
+    {% endblock %}
+    {% block content %}
+        <div class="container">
+            {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-info" role="alert">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+            {% endwith %}
+            {% block app_content %}
+        {% endblock %}
         </div>
-        <hr>
-        {% with messages = get_flashed_messages() %}
-        {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
-        {% endif %}
-        {% endwith %}  
-        {% block content %}{% endblock %}
-    </body>
-</html>
+    {% endblock %}
