@@ -45,6 +45,8 @@ def query_instructions(id):
 
     response = requests.request("GET", url, headers=headers)
 
+    response.raise_for_status()
+
     return response.json()
 
 
@@ -59,5 +61,7 @@ def query_recipe_ingredients(id):
     }
 
     response = requests.request("GET", url, headers=headers)
+
+    response.raise_for_status()
 
     return response.json()

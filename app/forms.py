@@ -3,11 +3,13 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Selec
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
 
+
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
+
 
 class CreateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -32,13 +34,16 @@ class SearchIngredientsForm(FlaskForm):
     ingredient = StringField('Ingredient', validators=[DataRequired()])
     submit = SubmitField('Search')
 
+
 class AddIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Add Ingredients')
 
+
 class DeleteIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Delete Items')
+
 
 class SearchRecipesForm(FlaskForm):
     recipe = StringField('Ingredients', validators=[DataRequired()])
