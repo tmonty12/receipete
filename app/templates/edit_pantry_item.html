@@ -1,12 +1,18 @@
-<!doctype html>
 {% extends "loggedin_base.html" %}
 
-{% block content %}
-    <h1 style="font-family:helvetica;">Edit Pantry Item</h1>
-    <body>
-    <style>
-    </style>
-        <div>Edit {{ ingredient.name }}</div>
-    </body>
-    
+{% block app_content %}
+    <h1 style="font-family:helvetica;">Edit {{ ingredient.name.capitalize() }}</h1>
+    <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image }}"/>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="form-group">
+            {{ form.expiration_date.label() }}<br>
+            {% if ingredient.expiration_date %}
+                {{ form.expiration_date(size=32, class='form-control', value=ingredient.expiration_date.strftime('%Y-%m-%d') ) }}
+            {% else %}
+                {{ form.expiration_date(size=32, class='form-control') }}
+            {% endif %}
+        </div>
+        {{ form.submit(class='btn btn-default') }}
+    </form> 
 {% endblock %}

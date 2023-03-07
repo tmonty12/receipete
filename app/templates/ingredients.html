@@ -1,6 +1,7 @@
-<!doctype html>
 {% extends "loggedin_base.html" %}
-{% block content %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %}
     <style>
         .ingredient {
             display: flex;
@@ -16,19 +17,23 @@
         }
     </style>
     <h1>Search Ingredients</h1>
-    <form action="" method="post" novalidate>
-        {{ search_form.hidden_tag() }}
-        <p>
-            {{ search_form.ingredient.label }}<br>
-            {{ search_form.ingredient(size=32) }}
-        </p>
-        <p>{{ search_form.submit() }}</p>
-    </form> 
-    <form action="" method="post" novalidate>
+    <div class="card">
+        <div class="card-body">
+            <form action="" method="post" novalidate>
+                {{ search_form.hidden_tag() }}
+                <div class="form-group">
+                    {{ search_form.ingredient.label() }}<br>
+                    {{ search_form.ingredient(size=32, class='form-control') }}
+                </div>
+                {{ search_form.submit(class='btn btn-default') }}
+            </form> 
+        </div>
+    </div>
     {% if ingredients %}
+    <form action="" method="post" novalidate></form>
     {% for ingredient in add_form.ingredients %}
-    {% set ingredient_values = ingredient.label().split(',') %}
-    {% set url_list = ingredient_values[1].split('</label>') %}
+        {% set ingredient_values = ingredient.label().split(',') %}
+        {% set url_list = ingredient_values[1].split('</label>') %}
         <div class="ingredient">
             {{ ingredient() }}
             <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
@@ -36,11 +41,10 @@
         </div>
         <label>
             Enter expiration date:
-            <input type="date" name="expiration" />
-          </label>
-
+            <input type="date" name="expiration-date-{{ ingredient_values[0].split('>')[1] }}" />
+        </label>
     {% endfor %}
-    <p>{{ add_form.submit() }}</p>
+    <p>{{ add_form.submit(class='btn btn-default') }}</p>
     {% endif %}
     </form>
 {% endblock %}

@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, widgets
+from wtforms import FieldList, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, widgets
+from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
 
@@ -39,11 +40,13 @@ class AddIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Add Ingredients')
 
-
 class DeleteIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Delete Items')
 
+class EditIngredientForm(FlaskForm):
+    expiration_date = DateField('Expiration Date', format='%d/%m/%Y')
+    submit = SubmitField('Update Item')
 
 class SearchRecipesForm(FlaskForm):
     recipe = StringField('Ingredients', validators=[DataRequired()])

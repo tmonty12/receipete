@@ -1,7 +1,7 @@
 <!doctype html>
 {% extends "loggedin_base.html" %}
 
-{% block content %}
+{% block app_content %}
     <style>
         .column 
         {
@@ -28,28 +28,40 @@
         .ingredient a {
             margin-right: 20px;
         }
+        .ingredient p {
+            margin-right:10px;
+        }
+        .ingredients {
+            display: grid;
+            grid-template-columns: 50% 50%;
+        }
+        p {
+            margin: 0;
+        }
     </style>
     <body>
         <h1 style="font-family:helvetica;">My Pantry</h1>
         {% if ingredients %}  
         <div>
-            <div class = "column" >
-                <span style="font-size:160%;">Ingredients:</span>
-            {% for ingredient in ingredients %}
-            <div class="ingredient">
-                <div>
-                    <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image}}" />
-                    <p>{{ingredient.name.capitalize()}}</p>
+            <span style="font-size:160%;">Ingredients:</span>
+            <div class="ingredients">
+                {% for ingredient in ingredients %}
+                <div class="ingredient">
+                    <div>
+                        <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image}}" />
+                        <p>{{ingredient.name.capitalize()}}</p>
+                    </div>
+                    <div>
+                        {% if ingredient.expiration_date %}
+                        <p><strong>Expires:</strong> {{ ingredient.expiration_date.strftime('%Y-%m-%d') }}</p>
+                        {% endif %}
+                    <a href="{{ url_for('edit_pantry_item', id=ingredient.id)}}"><button class="btn btn-default">Edit</button></a>
+                    </div>
+                    
                 </div>
-                <a href="{{ url_for('edit_pantry_item', id=ingredient.id)}}"><button>Edit</button></a>
-            </div>
             {% endfor %}
-            <a href="{{ url_for('delete_pantry_items')}}"><button>Delete Items</button></a>
-            </div class = "column">
-            <div class = "column" >
-                <span style="font-size:160%;">Expiration Dates:</span>
-                
-            </div class = "column">
+            </div>
+            <a href="{{ url_for('delete_pantry_items')}}"><button class="btn">Delete Items</button></a>
             {% else %}
             <p>You currently have no ingredients. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
             {% endif %}

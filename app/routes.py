@@ -1,11 +1,12 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
 from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
-    SearchRecipesForm
+    SearchRecipesForm, EditIngredientForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient
 from werkzeug.urls import url_parse
 from app.api import query_ingredients, query_recipes, query_instructions, query_recipe_ingredients
+from datetime import datetime
 
 
 # Landing page containing list of generated Recipes
@@ -114,7 +115,16 @@ def edit_pantry_item(id):
     ingredient = Ingredient.query.filter_by(id=id).first()
     if not ingredient:
         return redirect(url_for('pantry'))
-    return render_template('edit_pantry_item.html', title='Edit Pantry Item', ingredient=ingredient)
+    form = EditIngredientForm()
+    print(request.form, form.validate_on_submit())
+    if form.validate_on_submit():
+        print('test')
+        print(datetime.strptime(form.expiration_date.data, '%Y-%m-%d'))
+        ingredient.expiration_date = datetime.strptime(form.expiration_date.data, '%Y-%m-%d')
+        db.session.commit()
+        return redirect(url_for('pantry'))
+
+    return render_template('edit_pantry_item.html', title='Edit Pantry Item', ingredient=ingredient, form=form)
 
 
 @app.route('/pantry/delete', methods=['GET', 'POST'])
@@ -157,7 +167,8 @@ def search_ingredients():
         else:
             for ingredient in add_form.ingredients.data:
                 api_id, name, image = ingredient.split(',')
-                ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user)
+                expiration_date = datetime.strptime(request.form.get(f'expiration-date-{name}'), '%Y-%m-%d')
+                ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user, expiration_date=expiration_date)
                 db.session.add(ingredient)
                 flash(f'You have added {name} to your pantry.')
             db.session.commit()

@@ -32,6 +32,7 @@ class Ingredient(db.Model):
     name = db.Column(db.String(100), nullable=False)
     image = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    expiration_date = db.Column(db.DateTime)
 
     def __repr__(self):
         return f'<Ingredient {self.name}>'
