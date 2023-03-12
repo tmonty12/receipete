@@ -1,9 +1,9 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
 from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
-    SearchRecipesForm, EditIngredientForm
+    SearchRecipesForm, EditIngredientForm, EditAllergiesForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Ingredient
+from app.models import User, Ingredient, Allergy
 from werkzeug.urls import url_parse
 from app.api import query_ingredients, query_recipes, query_instructions, query_recipe_ingredients
 from datetime import datetime
@@ -105,7 +105,10 @@ def create_account():
 @app.route('/pantry', methods=['GET'])
 @login_required
 def pantry():
-    ingredients = current_user.ingredients.all()
+    # First need to grab ingredients with expiration date and sort by ascending date.
+    # Then grab ingredients without expiration date and append them to the end of ingredients list
+    ingredients = current_user.ingredients.filter(Ingredient.expiration_date != None).order_by(Ingredient.expiration_date).all()
+    ingredients += current_user.ingredients.filter_by(expiration_date=None).all()
     return render_template('pantry.html', title='Pantry', ingredients=ingredients)
 
 
@@ -116,13 +119,12 @@ def edit_pantry_item(id):
     if not ingredient:
         return redirect(url_for('pantry'))
     form = EditIngredientForm()
-    print(request.form, form.validate_on_submit())
     if form.validate_on_submit():
-        print('test')
-        print(datetime.strptime(form.expiration_date.data, '%Y-%m-%d'))
-        ingredient.expiration_date = datetime.strptime(form.expiration_date.data, '%Y-%m-%d')
+        ingredient.expiration_date = form.expiration_date.data
         db.session.commit()
         return redirect(url_for('pantry'))
+    elif ('expiration_date' in form.errors):
+        flash(f"Error with expiration date value: {form.errors['expiration_date']}")
 
     return render_template('edit_pantry_item.html', title='Edit Pantry Item', ingredient=ingredient, form=form)
 
@@ -132,7 +134,7 @@ def edit_pantry_item(id):
 def delete_pantry_items():
     ingredients = current_user.ingredients.all()
     form = DeleteIngredientsForm()
-    form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.image}") for ingredient in ingredients]
+    form.ingredients.choices = [(ingredient.id, f"{ingredient.name},{ingredient.expiration_date.strftime('%Y-%m-%d') if ingredient.expiration_date else ''},{ingredient.image}") for ingredient in ingredients]
 
     if request.form.get('submit') == 'Delete Items':
         for ingredient in form.ingredients.data:
@@ -176,6 +178,30 @@ def search_ingredients():
 
     return render_template('ingredients.html', title='Search Ingredients', search_form=search_form, add_form=add_form,
                            ingredients=ingredients)
+
+@app.route('/allergies/edit', methods=['GET', 'POST'])
+@login_required
+def edit_allergies():
+    current_user_allergies = [allergy.type for allergy in current_user.allergies.all()]
+    form = EditAllergiesForm(allergies=current_user_allergies)
+
+    if form.validate_on_submit():
+        for allergy in current_user.allergies.all():
+            if allergy.type not in form.allergies.data:
+                db.session.delete(allergy)
+        for allergy in form.allergies.data:
+            if allergy not in current_user_allergies:
+                user_allergy = Allergy(user=current_user, type=allergy)
+                db.session.add(user_allergy)
+        db.session.commit()
+        return redirect(url_for('profile'))
+
+    return render_template('edit_allergies.html', title='Edit Allergies', form=form)
+
+@app.route('/profile', methods=['GET'])
+@login_required
+def profile():
+    return render_template('profile.html', title='Profile', allergies=current_user.allergies.all())
 
 # @app.route('/recipes', methods=['GET', 'POST'])
 # @login_required

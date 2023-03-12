@@ -3,6 +3,7 @@ from wtforms import FieldList, StringField, PasswordField, BooleanField, SubmitF
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
+from app.api import allergies
 
 
 class LoginForm(FlaskForm):
@@ -30,7 +31,6 @@ class CreateAccountForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
-
 class SearchIngredientsForm(FlaskForm):
     ingredient = StringField('Ingredient', validators=[DataRequired()])
     submit = SubmitField('Search')
@@ -45,9 +45,13 @@ class DeleteIngredientsForm(FlaskForm):
     submit = SubmitField('Delete Items')
 
 class EditIngredientForm(FlaskForm):
-    expiration_date = DateField('Expiration Date', format='%d/%m/%Y')
+    expiration_date = DateField('Expiration Date') #format='%d/%m/%Y'
     submit = SubmitField('Update Item')
 
 class SearchRecipesForm(FlaskForm):
     recipe = StringField('Ingredients', validators=[DataRequired()])
     submit = SubmitField('Search')
+
+class EditAllergiesForm(FlaskForm):
+    allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
+    submit = SubmitField('Edit Allergies')

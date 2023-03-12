@@ -1,36 +1,57 @@
 <!doctype html>
 {% extends "loggedin_base.html" %}
 
-{% block content %}
+{% block app_content %}
     <style>
+        .ingredients {
+            display: grid;
+            grid-template-columns: 50% 50%;
+            row-gap: 10px;
+            column-gap: 10px;
+            margin: 20px 0px;
+        }
         .ingredient {
             display: flex;
             align-items: center;
-            margin: 10px;
             background-color: #F2F3F5;
-            border-radius: 10px
+            border-radius: 10px;
+            justify-content: space-between;
         }
         .ingredient img {
             max-width: 50px;
             max-height: 50px;
             margin: 10px;
         }
+        .ingredient input {
+            margin-left: 10px;
+        }
+        .ingredient p {
+            margin-right: 10px;
+            margin-bottom: 0px;
+        }
     </style>
-
     <h1 style="font-family:helvetica;">Delete Pantry Items</h1>
     <form action="" method="post" novalidate>
+    <div class="ingredients">
     {% if ingredients %}
     {% for ingredient in form.ingredients %}
     {% set ingredient_values = ingredient.label().split(',') %}
-    {% set url_list = ingredient_values[1].split('</label>') %}
+    {% set url_list = ingredient_values[2].split('</label>') %}
         <div class="ingredient">
-            {{ ingredient() }}
-            <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
-            {{ ingredient_values[0] }}
+            <div>
+                {{ ingredient() }}
+                <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
+                {{ ingredient_values[0] }}
+            </div>
+            <div>
+                {% if ingredient_values[1] %}
+                <p><strong>Expires:</strong> {{ ingredient_values[1] }}</p>
+                {% endif %}
+            </div>
         </div>
     {% endfor %}
-    <p>{{ form.submit() }}</p>
-    
+    </div>
+    <p>{{ form.submit(class='btn btn-default') }}</p>
     {% else %}
     <p>You currently have no ingredients. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
     {% endif %}

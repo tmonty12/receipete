@@ -16,6 +16,7 @@ class User(UserMixin, db.Model):
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
     ingredients = db.relationship('Ingredient', backref='user', lazy='dynamic')
+    allergies = db.relationship('Allergy', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -43,3 +44,11 @@ class Recipes(db.Model):
     name = db.Column(db.String(100), nullable=False)
     #image = db.Column(db.String(100), nullable=False)
     #user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+class Allergy(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    type = db.Column(db.String(64), index=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+
+    def __repr__(self):
+        return f'<Allergy {self.type}>'
