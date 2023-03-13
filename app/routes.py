@@ -1,7 +1,7 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
 from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
-    SearchRecipesForm, EditIngredientForm, EditAllergiesForm
+    SearchRecipesForm, EditIngredientForm, EditAllergiesForm, DeleteAllergiesForm
 from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ingredient, Allergy
 from werkzeug.urls import url_parse
@@ -202,6 +202,25 @@ def edit_allergies():
 @login_required
 def profile():
     return render_template('profile.html', title='Profile', allergies=current_user.allergies.all())
+
+@app.route('/allergies/delete', methods=['GET', 'POST'])
+@login_required
+def delete_allergies():
+    current_user_allergies = [allergy.type for allergy in current_user.allergies.all()]
+    form = DeleteAllergiesForm(allergies=current_user_allergies)
+
+    if form.validate_on_submit():
+        for allergy in current_user.allergies.all():
+            if allergy.type not in form.allergies.data:
+                db.session.delete(allergy)
+        for allergy in form.allergies.data:
+            if allergy not in current_user_allergies:
+                user_allergy = Allergy(user=current_user, type=allergy)
+                db.session.delete(user_allergy)
+        db.session.commit()
+        return redirect(url_for('profile'))
+
+    return render_template('delete_allergies.html', title='Delete Allergies', form=form)
 
 # @app.route('/recipes', methods=['GET', 'POST'])
 # @login_required

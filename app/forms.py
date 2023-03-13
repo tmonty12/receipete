@@ -55,3 +55,7 @@ class SearchRecipesForm(FlaskForm):
 class EditAllergiesForm(FlaskForm):
     allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Edit Allergies')
+
+class DeleteAllergiesForm(FlaskForm):
+    allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
+    submit = SubmitField('Delete Allergies')
