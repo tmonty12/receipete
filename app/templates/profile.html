@@ -42,4 +42,9 @@
             <p>You currently have no allergies. If you have any allergies, go to the  <a href="{{ url_for('edit_allergies')}}">edit allergies form</a> to add any.</p>
         </div>
     {% endif %}
+    <div class="recipes-title">
+        <h2>Liked Recipes</h2>
+        <a href="{{ url_for('edit_allergies')}}"><button class="btn btn-default">Edit</button></a>
+        <a href="{{ url_for('delete_allergies')}}"><button class="btn btn-default">Delete</button></a>
+    </div>
 {% endblock %}
