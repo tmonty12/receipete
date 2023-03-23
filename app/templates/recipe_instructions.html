@@ -1,29 +1,72 @@
 <!doctype html>
 {% extends "loggedin_base.html" %}
 
-{% block content %}
+{% block app_content %}
     <style>
-
-
+        .recipe-card {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #F2F3F5;
+            border-radius: 10px;
+        }
+        .recipe-image {
+            display: flex;
+            justify-content: center;
+        }
+        .recipe-image img {
+            border-radius: 10px;
+        }
+        .recipe-title {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .cooking-time h3{
+            display: inline;
+        }
+        .cooking-time {
+            margin-top: 20px;
+        }
+        .ingredient-img {
+            max-width: 50px;
+            max-height: 50px;
+        }
+        .table tbody tr td {
+            vertical-align: middle;
+        }
+        .recipe-page {
+            margin-bottom: 20px;
+        }
     </style>
-    <h1 style="font-family:helvetica;">Instructions</h1>
-    {% if instructions %}
-        
-        <div class="instructions">
-            <div>
-                <img src="{{ instructions['image']  }}" />
-                <p style = "font-weight:bolder"> Instructions: </p>
-                <p>{{ instructions['instructions'] }}</p>
-            </div>
-
+    <div class="recipe-page">
+        <h1 class="recipe-title">{{ recipe.name }}</h1>
+        <div class="recipe-image">
+            <img src="{{ recipe.image  }}" />
         </div>
-        <div class="ingredients">
-           <span style = "font-weight:bolder">Ingredients: </span>
-            {%for ingredient in ingredients%}
-                <div>
-                    <p> {{ ingredient[0] }}</p>
-                </div>
-            {%endfor%}
+        <div class="cooking-time recipe-card"><h3>Cooking time: </h3>{{ recipe.preparation_time}} minutes</div>
+        <div class="recipe-card">
+            <h3>Instructions: </h3>
+            <p>{{ recipe.instructions }}</p>
         </div>
-    {% endif %}
+        <div class="recipe-card">
+            <h3>Ingredients: </h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for ingredient in recipe.ingredients.all() %}
+                        <tr>
+                            <td><img class='ingredient-image' src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image }}"/></td>
+                            <td>{{ ingredient.name }}</td>
+                            <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
 {% endblock %}

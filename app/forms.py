@@ -12,6 +12,11 @@ class LoginForm(FlaskForm):
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+class ChangePasswordForm(FlaskForm):
+    password = PasswordField('Password', validators=[DataRequired()])
+    password2 = PasswordField(
+        'Repeat Password', validators=[DataRequired(), EqualTo('password')])
+    submit = SubmitField('Change')
 
 class CreateAccountForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -55,7 +60,3 @@ class SearchRecipesForm(FlaskForm):
 class EditAllergiesForm(FlaskForm):
     allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Edit Allergies')
-
-class DeleteAllergiesForm(FlaskForm):
-    allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
-    submit = SubmitField('Delete Allergies')

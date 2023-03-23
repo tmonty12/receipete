@@ -49,32 +49,11 @@ def query_recipes_2(ingredients):
 
     response.raise_for_status()
 
-    print(response.status_code)
-    print(response.headers)
-    print(response.text)
-
     return response.json()
 
 
-def query_instructions(id):
+def query_recipe_information(id):
     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + id + "/information"
-
-    headers = {
-        "X-RapidAPI-Key": "2d4a8dd1fdmsh729ea9408c304cep1e20afjsn8778ac3491bf",
-        "X-RapidAPI-Host": "spoonacular-recipe-food-nutrition-v1.p.rapidapi.com"
-    }
-
-    response = requests.request("GET", url, headers=headers)
-
-    response.raise_for_status()
-
-    return response.json()
-
-
-def query_recipe_ingredients(id):
-    import requests
-
-    url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/" + id + "/ingredientWidget.json"
 
     headers = {
         "X-RapidAPI-Key": "2d4a8dd1fdmsh729ea9408c304cep1e20afjsn8778ac3491bf",

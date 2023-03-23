@@ -1,11 +1,11 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
 from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
-    SearchRecipesForm, EditIngredientForm, EditAllergiesForm, DeleteAllergiesForm
+    SearchRecipesForm, EditIngredientForm, EditAllergiesForm, ChangePasswordForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Ingredient, Allergy
+from app.models import User, Ingredient, Allergy, Recipe, RecipeIngredient
 from werkzeug.urls import url_parse
-from app.api import query_ingredients, query_recipes, query_instructions, query_recipe_ingredients
+from app.api import query_ingredients, query_recipes, query_recipe_information
 from datetime import datetime
 
 
@@ -27,18 +27,19 @@ def index():
     return render_template('recipes.html', title='Recipes', recipes=recipes)
 
 
-@app.route('/summary/<id>', methods=['GET', 'POST'])
+@app.route('/recipe/<id>', methods=['GET', 'POST'])
 @login_required
 def view_recipe(id):
-    instructions = []
-    ingredients = []
-
-    ingredients = query_recipe_ingredients(id)
-    instructions = query_instructions(id)
-
-    ingredients = [(f"{ingredient['name']}", ingredient['amount']) for ingredient in ingredients['ingredients']]
-
-    return render_template('recipe_instructions.html', title='Instructions', instructions=instructions, ingredients=ingredients)
+    recipe = Recipe.query.filter_by(api_id=id).first()
+    if recipe is None:
+        recipe_information = query_recipe_information(id)
+        recipe = Recipe(api_id=id, name=recipe_information['title'], image=recipe_information['image'], instructions=recipe_information['instructions'], preparation_time=int(recipe_information['preparationMinutes']))
+        db.session.add(recipe)
+        for extendedIngredient in recipe_information['extendedIngredients']:
+            ingredient = RecipeIngredient(name=extendedIngredient['name'], amount=float(extendedIngredient['amount']), unit=extendedIngredient['unit'], image=extendedIngredient['image'], recipe=recipe)
+            db.session.add(ingredient)
+        db.session.commit()
+    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe)
 
 
 # Login page
@@ -154,7 +155,6 @@ def search_ingredients():
     add_form = AddIngredientsForm()
     ingredients = []
     
-    print(request.form, add_form.validate())
     if request.form.get('submit') == 'Search' and search_form.validate():
         ingredients = query_ingredients(search_form.ingredient.data)
         if len(ingredients) == 0:
@@ -208,24 +208,20 @@ def edit_allergies():
 def profile():
     return render_template('profile.html', title='Profile', allergies=current_user.allergies.all())
 
-@app.route('/allergies/delete', methods=['GET', 'POST'])
+@app.route('/profile/change-password', methods=['GET', 'POST'])
 @login_required
-def delete_allergies():
-    current_user_allergies = [allergy.type for allergy in current_user.allergies.all()]
-    form = DeleteAllergiesForm(allergies=current_user_allergies)
+def change_password():
+    form = ChangePasswordForm()
 
     if form.validate_on_submit():
-        for allergy in current_user.allergies.all():
-            if allergy.type not in form.allergies.data:
-                db.session.delete(allergy)
-        for allergy in form.allergies.data:
-            if allergy not in current_user_allergies:
-                user_allergy = Allergy(user=current_user, type=allergy)
-                db.session.delete(user_allergy)
-        db.session.commit()
-        return redirect(url_for('profile'))
-
-    return render_template('delete_allergies.html', title='Delete Allergies', form=form)
+        if current_user.check_password(form.password2.data):
+            flash('Can\'t change password to current password.')
+        else:
+            current_user.set_password(form.password2.data)
+            db.session.commit()
+            flash('Congratulations, you have successfully changed your password!')
+            return redirect(url_for('profile'))
+    return render_template('change_password.html', title='Change Password', form=form)
 
 # @app.route('/recipes', methods=['GET', 'POST'])
 # @login_required

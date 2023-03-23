@@ -38,12 +38,22 @@ class Ingredient(db.Model):
     def __repr__(self):
         return f'<Ingredient {self.name}>'
 
-class Recipes(db.Model):
+class Recipe(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    api_id = db.Column(db.Integer, nullable=False)
+    api_id = db.Column(db.Integer, index=True, nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    #image = db.Column(db.String(100), nullable=False)
-    #user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    image = db.Column(db.String(100), nullable=False)
+    instructions = db.Column(db.Text)
+    preparation_time = db.Column(db.Integer, nullable=False)
+    ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy='dynamic')
+
+class RecipeIngredient(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    name = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.Float, nullable=False)
+    image=db.Column(db.String(100), nullable=False)
+    unit = db.Column(db.String(100), nullable=False) 
 
 class Allergy(db.Model):
     id = db.Column(db.Integer, primary_key=True)
