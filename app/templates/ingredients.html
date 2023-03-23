@@ -30,21 +30,22 @@
         </div>
     </div>
     {% if ingredients %}
-    <form action="" method="post" novalidate></form>
-    {% for ingredient in add_form.ingredients %}
-        {% set ingredient_values = ingredient.label().split(',') %}
-        {% set url_list = ingredient_values[1].split('</label>') %}
-        <div class="ingredient">
-            {{ ingredient() }}
-            <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
-            {{ ingredient_values[0] }}
-        </div>
-        <label>
-            Enter expiration date:
-            <input type="date" name="expiration-date-{{ ingredient_values[0].split('>')[1] }}" />
-        </label>
-    {% endfor %}
-    <p>{{ add_form.submit(class='btn btn-default') }}</p>
-    {% endif %}
+    <form action="" method="post" novalidate>
+        {{ add_form.hidden_tag() }}
+        {% for ingredient in add_form.ingredients %}
+            {% set ingredient_values = ingredient.label().split(',') %}
+            {% set url_list = ingredient_values[1].split('</label>') %}
+            <div class="ingredient">
+                {{ ingredient() }}
+                <img src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + url_list[0] }}"/>
+                {{ ingredient_values[0] }}
+            </div>
+            <label>
+                Enter expiration date:
+                <input type="date" name="expiration-date-{{ ingredient_values[0].split('>')[1] }}" />
+            </label>
+        {% endfor %}
+        <p>{{ add_form.submit(class='btn btn-default') }}</p>
+        {% endif %}
     </form>
 {% endblock %}

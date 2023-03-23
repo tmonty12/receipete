@@ -153,7 +153,8 @@ def search_ingredients():
     search_form = SearchIngredientsForm()
     add_form = AddIngredientsForm()
     ingredients = []
-
+    
+    print(request.form, add_form.validate())
     if request.form.get('submit') == 'Search' and search_form.validate():
         ingredients = query_ingredients(search_form.ingredient.data)
         if len(ingredients) == 0:
@@ -169,8 +170,12 @@ def search_ingredients():
         else:
             for ingredient in add_form.ingredients.data:
                 api_id, name, image = ingredient.split(',')
-                expiration_date = datetime.strptime(request.form.get(f'expiration-date-{name}'), '%Y-%m-%d')
-                ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user, expiration_date=expiration_date)
+                expiration_date = request.form.get(f'expiration-date-{name}')
+                if expiration_date != '':
+                    expiration_date = datetime.strptime(request.form.get(f'expiration-date-{name}'), '%Y-%m-%d')
+                    ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user, expiration_date=expiration_date)
+                else:
+                    ingredient = Ingredient(api_id=int(api_id), name=name, image=image, user=current_user)
                 db.session.add(ingredient)
                 flash(f'You have added {name} to your pantry.')
             db.session.commit()
