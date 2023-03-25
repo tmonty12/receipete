@@ -3,4 +3,3 @@
 /.idea
 Dockerfile
 app.db
-/migrations
