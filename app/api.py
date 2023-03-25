@@ -71,5 +71,6 @@ allergies = ['dairy', 'egg', 'gluten', 'peanut', 'sesame', 'seafood', 'shellfish
 
 
 if __name__ == "__main__":
-    print(query_recipes_2('tomato,cheese'))
+    # print(query_recipes_2('tomato,cheese'))
     # print(query_recipe_ingredients('474396'))
+    print(query_recipe_information('218125')['extendedIngredients'])

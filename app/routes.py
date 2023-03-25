@@ -7,6 +7,7 @@ from app.models import User, Ingredient, Allergy, Recipe, RecipeIngredient, Comm
 from werkzeug.urls import url_parse
 from app.api import query_ingredients, query_recipes, query_recipe_information
 from datetime import datetime
+import os
 
 
 # Landing page containing list of generated Recipes
@@ -33,7 +34,8 @@ def view_recipe(id):
     form = CommentForm()
     recipe = Recipe.query.filter_by(api_id=id).first()
     comments = []
-
+    default_ingredient_image = os.path.join(app.config['UPLOAD_FOLDER'], 'No_image_available.png')
+    
     if recipe is None:
         recipe_information = query_recipe_information(id)
         recipe = Recipe(api_id=id, name=recipe_information['title'], image=recipe_information['image'], instructions=recipe_information['instructions'], preparation_time=int(recipe_information['preparationMinutes']))
@@ -53,7 +55,7 @@ def view_recipe(id):
         db.session.commit()
         return redirect(url_for('view_recipe', id=id))
 
-    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe, form=form, comments=comments)
+    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe, form=form, comments=comments, default_ingredient_image=default_ingredient_image)
 
 
 # Login page

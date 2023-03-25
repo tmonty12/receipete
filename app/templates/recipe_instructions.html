@@ -60,7 +60,11 @@
                 <tbody>
                     {% for ingredient in recipe.ingredients.all() %}
                         <tr>
-                            <td><img class='ingredient-image' src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image }}"/></td>
+                            {% if ingredient.image %}
+                            <td><img class='ingredient-img' src="{{ 'https://spoonacular.com/cdn/ingredients_100x100/' + ingredient.image }}"/></td>
+                            {% else %}
+                            <td><img class='ingredient-img' src="{{ default_ingredient_image }}"/></td>
+                            {% endif %}
                             <td>{{ ingredient.name }}</td>
                             <td>{{ ingredient.amount }} {{ ingredient.unit }}</td>
                         </tr>
