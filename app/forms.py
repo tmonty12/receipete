@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import FieldList, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, widgets
+from wtforms import FieldList, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, TextAreaField, widgets
 from wtforms.fields.html5 import DateField
 from wtforms.validators import DataRequired, ValidationError, Email, EqualTo
 from app.models import User
@@ -60,3 +60,7 @@ class SearchRecipesForm(FlaskForm):
 class EditAllergiesForm(FlaskForm):
     allergies = SelectMultipleField(choices=[(allergy, allergy) for allergy in allergies], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Edit Allergies')
+
+class CommentForm(FlaskForm):
+    comment = TextAreaField('Comment', validators=[DataRequired()])
+    submit = SubmitField('Post')

@@ -1,9 +1,9 @@
 from flask import redirect, flash, render_template, request, url_for, request
 from app import app, db
 from app.forms import LoginForm, CreateAccountForm, SearchIngredientsForm, AddIngredientsForm, DeleteIngredientsForm, \
-    SearchRecipesForm, EditIngredientForm, EditAllergiesForm, ChangePasswordForm
+    SearchRecipesForm, EditIngredientForm, EditAllergiesForm, ChangePasswordForm, CommentForm
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User, Ingredient, Allergy, Recipe, RecipeIngredient
+from app.models import User, Ingredient, Allergy, Recipe, RecipeIngredient, Comment
 from werkzeug.urls import url_parse
 from app.api import query_ingredients, query_recipes, query_recipe_information
 from datetime import datetime
@@ -30,7 +30,10 @@ def index():
 @app.route('/recipe/<id>', methods=['GET', 'POST'])
 @login_required
 def view_recipe(id):
+    form = CommentForm()
     recipe = Recipe.query.filter_by(api_id=id).first()
+    comments = []
+
     if recipe is None:
         recipe_information = query_recipe_information(id)
         recipe = Recipe(api_id=id, name=recipe_information['title'], image=recipe_information['image'], instructions=recipe_information['instructions'], preparation_time=int(recipe_information['preparationMinutes']))
@@ -39,7 +42,18 @@ def view_recipe(id):
             ingredient = RecipeIngredient(name=extendedIngredient['name'], amount=float(extendedIngredient['amount']), unit=extendedIngredient['unit'], image=extendedIngredient['image'], recipe=recipe)
             db.session.add(ingredient)
         db.session.commit()
-    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe)
+    else:
+        comments = recipe.comments.all()
+        for comment in comments:
+            comment.username = User.query.filter_by(id=comment.user_id).first().username
+    
+    if form.validate_on_submit():
+        comment = Comment(comment=form.comment.data, recipe=recipe, user=current_user)
+        db.session.add(comment)
+        db.session.commit()
+        return redirect(url_for('view_recipe', id=id))
+
+    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe, form=form, comments=comments)
 
 
 # Login page

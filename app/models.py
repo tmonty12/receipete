@@ -2,6 +2,7 @@ from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
 from sqlalchemy.sql import func
+from datetime import datetime
 
 
 # Tells flask how to get user object given an id
@@ -17,6 +18,7 @@ class User(UserMixin, db.Model):
     password_hash = db.Column(db.String(128))
     ingredients = db.relationship('Ingredient', backref='user', lazy='dynamic')
     allergies = db.relationship('Allergy', backref='user', lazy='dynamic')
+    comments = db.relationship('Comment', backref='user', lazy='dynamic')
 
     def __repr__(self):
         return f'<User {self.username}>'
@@ -44,8 +46,12 @@ class Recipe(db.Model):
     name = db.Column(db.String(100), nullable=False)
     image = db.Column(db.String(100), nullable=False)
     instructions = db.Column(db.Text)
-    preparation_time = db.Column(db.Integer, nullable=False)
+    preparation_time = db.Column(db.Integer, nullable=False, default=0)
     ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy='dynamic')
+    comments = db.relationship('Comment', backref='recipe', lazy='dynamic')
+
+    def __repr__(self):
+        return f'<Recipe {self.name}>'
 
 class RecipeIngredient(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -53,7 +59,7 @@ class RecipeIngredient(db.Model):
     name = db.Column(db.String(100), nullable=False)
     amount = db.Column(db.Float, nullable=False)
     image=db.Column(db.String(100), nullable=False)
-    unit = db.Column(db.String(100), nullable=False) 
+    unit = db.Column(db.String(100), nullable=False)
 
 class Allergy(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -62,3 +68,13 @@ class Allergy(db.Model):
 
     def __repr__(self):
         return f'<Allergy {self.type}>'
+
+class Comment(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_api_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    comment = db.Column(db.Text, nullable=False)
+    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
+
+    def __repr__(self):
+        return f'<Comment {self.id}>'
