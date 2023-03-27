@@ -1,5 +1,6 @@
 <!doctype html>
 {% extends "loggedin_base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
 
 {% block app_content %}
     <style>
@@ -27,6 +28,9 @@
             margin-right: 20px;
         }
     </style>
+    <div class="comment-form">
+        {{ wtf.quick_form(form) }}
+    </div>
     <h1 style="font-family:helvetica;">Recipes</h1>
     {% if recipes %}
         {% for recipe in recipes %}

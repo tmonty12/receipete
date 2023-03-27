@@ -64,3 +64,7 @@ class EditAllergiesForm(FlaskForm):
 class CommentForm(FlaskForm):
     comment = TextAreaField('Comment', validators=[DataRequired()])
     submit = SubmitField('Post')
+
+class timeLimitForm(FlaskForm):
+    time = StringField('Maximum Cooking Time', validators=[DataRequired()])
+    submit = SubmitField('Filter')
