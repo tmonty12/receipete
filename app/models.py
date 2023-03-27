@@ -10,6 +10,8 @@ from datetime import datetime
 def load_user(id):
     return User.query.get(int(id))
 
+
+
 # User table
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -49,6 +51,8 @@ class Recipe(db.Model):
     preparation_time = db.Column(db.Integer, nullable=False, default=0)
     ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy='dynamic')
     comments = db.relationship('Comment', backref='recipe', lazy='dynamic')
+    rating = db.Column(db.Integer, default=0)
+
 
     def __repr__(self):
         return f'<Recipe {self.name}>'
@@ -78,3 +82,9 @@ class Comment(db.Model):
 
     def __repr__(self):
         return f'<Comment {self.id}>'
+
+class Favorite(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    recipe_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('recipe.id'))
+    favorite = db.Column(db.Text, nullable=False)
