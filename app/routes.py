@@ -25,13 +25,18 @@ def index():
         ingredients_query += f'{ingredient.name},'
 
     if form.validate_on_submit():
-        recipes = query_recipes_2(ingredients_query, form.time.data)
-        recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes['results']]
+        if form.time.data.isdigit():
+            is_digit = True
+            recipes = query_recipes_2(ingredients_query, form.time.data)
+            recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes['results']]
+        else:
+            is_digit = False
     else:
+        is_digit = True
         recipes = query_recipes_2(ingredients_query, 600)
         recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes['results']]
 
-    return render_template('recipes.html', title='Recipes', recipes=recipes, form=form)
+    return render_template('recipes.html', title='Recipes', recipes=recipes, form=form, is_digit=is_digit)
 
 
 @app.route('/recipe/<id>', methods=['GET', 'POST'])

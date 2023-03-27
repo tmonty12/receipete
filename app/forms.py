@@ -66,5 +66,5 @@ class CommentForm(FlaskForm):
     submit = SubmitField('Post')
 
 class timeLimitForm(FlaskForm):
-    time = StringField('Maximum Cooking Time', validators=[DataRequired()])
+    time = StringField('Maximum Cooking Time (minutes)', validators=[DataRequired()], render_kw={"placeholder": "60"})
     submit = SubmitField('Filter')
