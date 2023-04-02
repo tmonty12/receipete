@@ -8,7 +8,7 @@ A pre-requisite for running the Receipete application is that you have Python in
 
 1. Clone this repository to your computer.
 
-`git clone https://github.com/tmonty12/receipete.git` 
+```git clone https://github.com/tmonty12/receipete.git```
 
 2. Change into the repository directory.
 `cd receipete`
@@ -20,7 +20,7 @@ We encourage you to use a virtual environment to handle library dependencies.
 4. Activate your virtual environment.
 `venv/Scripts/activate`
 
-5. Install the library dependencies in the requirements.txt file.
+5. Install the library dependencies in the `requirements.txt` file.
 `python -m pip install -r requirements.txt`
 
 6. Initialize your local database instance.
