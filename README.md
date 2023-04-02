@@ -4,5 +4,11 @@
 
 ### Installation
 
+Pre-requisite:
+- Have python version 3.10 installed
+
 1. Clone this repository to your computer.
-`git clone ` 
+
+`git clone https://github.com/tmonty12/receipete.git` 
+
+2. 
