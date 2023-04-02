@@ -8,35 +8,53 @@ A pre-requisite for running the Receipete application is that you have Python in
 
 1. Clone this repository to your computer.
 
-```git clone https://github.com/tmonty12/receipete.git```
+```
+git clone https://github.com/tmonty12/receipete.git
+```
 
 2. Change into the repository directory.
-`cd receipete`
+```
+cd receipete
+```
 
 3. Create a virtual environment.
-`python -m venv venv`
+```
+python -m venv venv
+```
 We encourage you to use a virtual environment to handle library dependencies.
 
 4. Activate your virtual environment.
-`venv/Scripts/activate`
+```
+venv/Scripts/activate
+```
 
 5. Install the library dependencies in the `requirements.txt` file.
-`python -m pip install -r requirements.txt`
+```
+python -m pip install -r requirements.txt
+```
 
 6. Initialize your local database instance.
-`flask db init`
+```
+flask db init
+```
 We are using sqlite for local deployment.
 
 7. Migrate your database.
-`flask db migrate`
+```
+flask db migrate
+```
 We are using the flask-migrate package to handle changes made during database development.
 
 8. Upgrade your database.
-`flask db upgrade`
+```
+flask db upgrade
+```
 
 ### Running the application locally
 1. Start the application.
-`flask run`
+```
+flask run
+```
 
 2. Navigate to the webpage.
-Enter localhost:5000 into your browser.
+Enter `localhost:5000` into your browser.
