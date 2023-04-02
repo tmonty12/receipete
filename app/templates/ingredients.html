@@ -19,14 +19,15 @@
     <h1>Search Ingredients</h1>
     <div class="card">
         <div class="card-body">
-            <form action="" method="post" novalidate>
+            {{ wtf.quick_form(search_form) }}
+            <!-- <form action="" method="post" novalidate>
                 {{ search_form.hidden_tag() }}
                 <div class="form-group">
                     {{ search_form.ingredient.label() }}<br>
                     {{ search_form.ingredient(size=32, class='form-control') }}
                 </div>
                 {{ search_form.submit(class='btn btn-default') }}
-            </form> 
+            </form>  -->
         </div>
     </div>
     {% if ingredients %}

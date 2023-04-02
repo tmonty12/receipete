@@ -18,6 +18,7 @@ import os
 def index():
     form = timeLimitForm()
 
+    is_digit = True
     recipes = []
     ingredients = current_user.ingredients.all()
     ingredients_query = ''
@@ -31,7 +32,7 @@ def index():
             recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes['results']]
         else:
             is_digit = False
-    else:
+    elif len(ingredients) > 0:
         is_digit = True
         recipes = query_recipes_2(ingredients_query, 600)
         recipes = [(f"{recipe['id']}", f"{recipe['title']}", f"{recipe['image']}") for recipe in recipes['results']]
@@ -173,12 +174,15 @@ def delete_pantry_items():
                                 for ingredient in ingredients]
 
     if request.form.get('submit') == 'Delete Items':
-        for ingredient in form.ingredients.data:
-            ingredient = Ingredient.query.filter_by(id=int(ingredient)).first()
-            db.session.delete(ingredient)
-            flash(f'You have deleted {ingredient.name} from your pantry.')
-        db.session.commit()
-        return redirect(url_for('delete_pantry_items'))
+        if len(form.ingredients.data) == 0:
+             flash(f"No ingredients were selected to delete.")
+        else:
+            for ingredient in form.ingredients.data:
+                ingredient = Ingredient.query.filter_by(id=int(ingredient)).first()
+                db.session.delete(ingredient)
+                flash(f'You have deleted {ingredient.name} from your pantry.')
+            db.session.commit()
+            return redirect(url_for('pantry'))
 
     return render_template('delete_pantry_items.html', form=form, ingredients=ingredients)
 

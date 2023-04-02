@@ -56,7 +56,7 @@
             </div>
             {%endfor%}
         {% else %}
-            <p>Your pantry is empty or no recipes were found</p>
+            <p>Your pantry is empty or no recipes were found. To add ingredients, <a href="{{ url_for('search_ingredients') }}">Click Here!</a></p>
         {% endif %}
     {% endif %}
 {% endblock %}

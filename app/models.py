@@ -51,7 +51,6 @@ class Recipe(db.Model):
     preparation_time = db.Column(db.Integer, nullable=False, default=0)
     ingredients = db.relationship('RecipeIngredient', backref='recipe', lazy='dynamic')
     comments = db.relationship('Comment', backref='recipe', lazy='dynamic')
-    rating = db.Column(db.Integer, default=0)
 
 
     def __repr__(self):

@@ -40,7 +40,6 @@ class SearchIngredientsForm(FlaskForm):
     ingredient = StringField('Ingredient', validators=[DataRequired()])
     submit = SubmitField('Search')
 
-
 class AddIngredientsForm(FlaskForm):
     ingredients = SelectMultipleField(choices=[], option_widget=widgets.CheckboxInput())
     submit = SubmitField('Add Ingredients')
