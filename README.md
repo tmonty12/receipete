@@ -4,4 +4,5 @@
 
 ### Installation
 
-1. Clone repo to your computer.
+1. Clone this repository to your computer.
+`git clone ` 
