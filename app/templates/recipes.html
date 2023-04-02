@@ -4,6 +4,11 @@
 
 {% block app_content %}
     <style>
+        .column
+        {
+            float: left;
+            width: 50%;
+        }
         .recipe {
             display: flex;
             align-items: center;
@@ -28,23 +33,30 @@
             margin-right: 20px;
         }
     </style>
-    <div class="comment-form">
+    <div class="recipe">
         {{ wtf.quick_form(form) }}
+        <a href="{{ url_for('index') }}"><button class="btn btn-default">Reset</button></a>
+        {% if not is_digit %}
+            <h1 style="font-family:helvetica;">Enter a Valid Time (Ex. 120)</h1>
+        {% endif %}
     </div>
-    <h1 style="font-family:helvetica;">Recipes</h1>
-    {% if recipes %}
-        {% for recipe in recipes %}
-        <div class="recipe">
-            <div>
-                <img src="{{ recipe[2] }}" />
-                <p>{{ recipe[1] }}</p>
+
+    {% if is_digit %}
+        <h1 style="font-family:helvetica;">Recipes</h1>
+        {% if recipes %}
+            {% for recipe in recipes %}
+            <div class="recipe">
+                <div>
+                    <img src="{{ recipe[2] }}" />
+                    <p>{{ recipe[1] }}</p>
+                </div>
+                <a href="{{ url_for('view_recipe', id=recipe[0])}}">
+                    <button class="btn btn-default">  View Recipe</button>
+                </a>
             </div>
-            <a href="{{ url_for('view_recipe', id=recipe[0])}}">
-                <button class="btn btn-default">  View Recipe</button>
-            </a>
-        </div>
-        {%endfor%}
-    {% else %}
-        <p>Your pantry is empty or no recipes were found</p>
+            {%endfor%}
+        {% else %}
+            <p>Your pantry is empty or no recipes were found</p>
+        {% endif %}
     {% endif %}
 {% endblock %}
