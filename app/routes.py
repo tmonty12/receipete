@@ -37,7 +37,7 @@ def index():
 @app.route('/recipe/<id>', methods=['GET', 'POST'])
 @login_required
 def view_recipe(id):
-    form = CommentForm()
+    comment_form = CommentForm()
     recipe = Recipe.query.filter_by(api_id=id).first()
     comments = []
     default_ingredient_image = os.path.join(app.config['UPLOAD_FOLDER'], 'No_image_available.png')
@@ -59,13 +59,13 @@ def view_recipe(id):
         for comment in comments:
             comment.username = User.query.filter_by(id=comment.user_id).first().username
 
-    if form.validate_on_submit():
-        comment = Comment(comment=form.comment.data, recipe=recipe, user=current_user)
+    if comment_form.validate_on_submit():
+        comment = Comment(comment=comment_form.comment.data, recipe=recipe, user=current_user)
         db.session.add(comment)
         db.session.commit()
         return redirect(url_for('view_recipe', id=id))
 
-    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe, form=form,
+    return render_template('recipe_instructions.html', title='Instructions', recipe=recipe, comment_form=comment_form,
                            comments=comments, default_ingredient_image=default_ingredient_image)
 
 

@@ -4,9 +4,17 @@
     {% endblock %}
     {% block navbar %}
         <nav class="navbar navbar-default">
-            <span style="font-family:helvetica; font-weight:bolder; font-size:130%;">Receipete: </span>
-            <a style="font-family:helvetica; font-size:130%;" href="/login">Login</a>
-            <a style="font-family:helvetica; font-size:130%;" href="/create-account">Create Account</a>
+            <div class="container">
+                <div class="navbar-header">
+                    <a  class="navbar-brand" href="{{ url_for('index')}}">Receipete</a>
+                </div>
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="{{ url_for('create_account') }}">Create Account</a></li>
+                    <li><a href="{{ url_for('login') }}">Login</a></li>
+                </ul>
+            </div>
+        </div>
         </nav>
     {% endblock %}
     {% block content %}

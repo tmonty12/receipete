@@ -37,8 +37,8 @@ def query_recipes(ingredients, time):
 
 def query_recipes_2(ingredients, time):
     url = "https://spoonacular-recipe-food-nutrition-v1.p.rapidapi.com/recipes/complexSearch"
-
-    querystring = {"query": "", "includeIngredients": ingredients, "number": "10", "ignorePantry": "true", "ranking": "1", "maxReadyTime":time}
+    
+    querystring = {"query": "", "includeIngredients": ingredients, "number": "10", "ignorePantry": "true", "ranking": "1", "maxReadyTime": time}
 
     headers = {
         "X-RapidAPI-Key": "2d4a8dd1fdmsh729ea9408c304cep1e20afjsn8778ac3491bf",
