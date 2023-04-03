@@ -35,25 +35,25 @@ python -m pip install -r requirements.txt
 
 6. Initialize your local database instance.
 ```
-flask db init
+python -m flask db init
 ```
 We are using sqlite for local deployment.
 
 7. Migrate your database.
 ```
-flask db migrate
+python -m flask db migrate
 ```
 We are using the flask-migrate package to handle changes made during database development.
 
 8. Upgrade your database.
 ```
-flask db upgrade
+python -m flask db upgrade
 ```
 
 ### Running the application locally
 1. Start the application.
 ```
-flask run
+python -m flask run
 ```
 
 2. Navigate to the webpage.
