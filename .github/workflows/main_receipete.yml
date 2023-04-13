@@ -30,6 +30,15 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
         
+      - name: Initialize database instance
+        run: flask db init
+        
+      - name: Migrate database instance
+        run: flask db migrate
+        
+      - name: Upgrade database instance
+        run: flask db upgrade
+        
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
       
       - name: Upload artifact for deployment jobs
