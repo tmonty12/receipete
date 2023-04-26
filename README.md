@@ -1,4 +1,4 @@
-# receipete 
+# receipete
 
 ## How to use Receipete application locally
 
